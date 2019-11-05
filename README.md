@@ -7,6 +7,6 @@ TODO : fichier setting
 1. Compte gpies (possiblité de changer de compte gpsies)
 2. Trier les tags? (à étudier si possible)
 3. Proposer 3 type de comportement au clic
-  −> ACTION_VIEW url du fichier GPX (ex : http://www.gpsies.com/download.do?fileId=ntlplanarwiojrtd&filetype=gpxTrk)
-  -> ACTION_VIEW url de la map (ex : https://www.gpsies.com/map.do?fileId=aogsdvvydyhicskl)
-  -> Télécharger le fichier et l'ouvrir avec OSMAND 
+  *ACTION_VIEW url du fichier GPX (ex : http://www.gpsies.com/download.do?fileId=ntlplanarwiojrtd&filetype=gpxTrk)
+  *ACTION_VIEW url de la map (ex : https://www.gpsies.com/map.do?fileId=aogsdvvydyhicskl)
+  *Télécharger le fichier et l'ouvrir avec OSMAND 
