@@ -19,7 +19,12 @@ public class GpsiesItem {
     }
 
 
+    public String getLinkGpsies(){
 
+        String gpx = "https://www.gpsies.com/map.do?fileId="+id ;
+        return gpx;
+
+    }
 
     public String getGPX(){
 
