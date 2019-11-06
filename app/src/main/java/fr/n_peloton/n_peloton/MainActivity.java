@@ -12,12 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+import com.opencsv.CSVReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -31,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         String fluxRss = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
+         String flusRss = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
+
+        String fluxCsv ="https://n-peloton.fr/getMapCsv.php";
        gpsiesItems = new ArrayList<>();
 
         mView=  findViewById(R.id.liste);
 
-        new GetXMLdata().execute(fluxRss);
+        new GetCSVdata().execute(fluxCsv);
 
         readGpsiesItem();
 
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                // selectedFilePath = apt.getText().toString();
 
                 Log.d("title ", gpsiesItems.get(position).getTitle());
-                Log.d("gpx ", gpsiesItems.get(position).link);
+                Log.d("gpx ", gpsiesItems.get(position).getGPX());
                 openGPX(gpsiesItems.get(position));
                 }
         });
@@ -95,11 +96,7 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
 
 
 
-
-
-
-
-    public static String readGPXAsString(String linkGPX) {
+  public static String readGPXAsString(String linkGPX) {
         String result = "";
 
         InputStream is = null;
@@ -126,100 +123,46 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
     }
 
 
-    private void readFluxRss(String fluxrss){
 
 
-            XmlPullParserFactory parserFactory;
-            try {
-                parserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = parserFactory.newPullParser();
-                InputStream is = new URL(fluxrss).openStream();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(is, null);
-
-                processParsing(parser);
-
-            } catch (XmlPullParserException e) {
-                Log.e("XmlPullParserException",e.getMessage());
-
-            } catch (IOException e) {
-                Log.e("IOException",e.getMessage());
-            }
+    private void readFluxCSV(String fluxCsv){
 
 
-    }
+          GpsiesItem currentItem = null;
+            try{
+                InputStream is = new URL(fluxCsv).openStream();
+                InputStreamReader isr = new InputStreamReader(is);
 
-    private void processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
-        int eventType = parser.getEventType();
-        GpsiesItem currentItem = null;
+                CSVReader reader = new CSVReader(isr);
+                String [] nextLine;
+                while ((nextLine = reader.readNext()) != null) {
+                    // nextLine[] is an array of values from the line
+                    String[] parts = nextLine[0].split(";");
+                    if(parts.length>0){
+                        currentItem = new GpsiesItem(parts[0],parts[1]);
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String eltName = null;
-
-            switch (eventType) {
-                case XmlPullParser.START_TAG:
-                    eltName = parser.getName();
-
-                    if ("item".equals(eltName)) {
-                        currentItem = new GpsiesItem();
                         gpsiesItems.add(currentItem);
-                    } else if (currentItem != null) {
-                        if ("title".equals(eltName)) {
-                            currentItem.title = parser.nextText();
-                        } else if ("link".equals(eltName)) {
 
-                            currentItem.link = parser.nextText();
-
-                        } else if ("description".equals(eltName)) {
-                            currentItem.description = parser.nextText();
-                        }
                     }
-
-                    break;
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                Log.e(e.getClass().toString(), e.getMessage());
             }
 
-            eventType = parser.next();
-        }
 
     }
 
 
-    private void printGpiesItems(ArrayList<GpsiesItem> gpsiesItems) {
-        StringBuilder builder = new StringBuilder();
-
-        for (GpsiesItem gpsiesItem: gpsiesItems) {
 
 
-            builder.append(gpsiesItem.title).append("\n").
-                    append(gpsiesItem.link).append("\n").
-                    append(gpsiesItem.description).append("\n\n");
-        }
-
-        String[] files_names = new String[gpsiesItems.size()];
-        int i =0;
-        for (GpsiesItem gpsiesItem: gpsiesItems) {
-            files_names[i]=gpsiesItem.title;
-            Log.d("Files", "FileName:" + files_names[i]);
-            i++;
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                android.R.layout.simple_list_item_1, files_names);
-        if(mView!=null){
-            mView.setAdapter(adapter);
-        } else{
-            Log.d("test","null");
-        }
 
 
-        Log.d("items",builder.toString());
-    }
-
-    private class GetXMLdata extends AsyncTask<String,Void,String>{
+    private class GetCSVdata extends AsyncTask<String,Void,String>{
 
         @Override
         protected String doInBackground(String... strings) {
-            readFluxRss(strings[0]);
+            readFluxCSV(strings[0]);
             return null;
         }
 
