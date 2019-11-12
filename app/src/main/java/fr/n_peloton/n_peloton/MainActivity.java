@@ -110,7 +110,7 @@ private void openGPX(GpsiesItem gpsiesItem){
 
 private void openMapsOnGpsies(GpsiesItem gpsiesItem){
     Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(gpsiesItem.getLinkGpsies()))git;
+    i.setData(Uri.parse(gpsiesItem.getLinkGpsies()));
     startActivity(i);
 
 }
