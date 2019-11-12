@@ -5,14 +5,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.opencsv.CSVReader;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +28,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-    ListView mView;
+  //  CardView mView;
     ArrayList<GpsiesItem> gpsiesItems;
+    private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +40,31 @@ public class MainActivity extends AppCompatActivity {
         String fluxCsv ="https://n-peloton.fr/getMapCsv.php";
        gpsiesItems = new ArrayList<>();
 
-        mView=  findViewById(R.id.liste);
-
         new GetCSVdata().execute(fluxCsv);
 
-        readGpsiesItem();
+
+
+        fillRecycleView();
 
     }
-    private void readGpsiesItem() {
+
+
+    private  void fillRecycleView(){
+
+        recyclerView = (RecyclerView) findViewById(R.id.liste);
+        //définit l'agencement des cellules, ici de façon verticale, comme une ListView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //pour adapter en grille comme une RecyclerView, avec 2 cellules par ligne
+        //recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+
+        //puis créer un MyAdapter, lui fournir notre liste de villes.
+        //cet adapter servira à remplir notre recyclerview
+        recyclerView.setAdapter(new MyAdapter(gpsiesItems));
+    }
+
+
+ /***  private void readGpsiesItem() {
         Log.d("readGpsiesItem","in");
 
         String[] files_names = new String[gpsiesItems.size()];
@@ -73,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 openGPX(gpsiesItems.get(position));
                 }
         });
-    }
+    } * **/
 
 private void openGPX(GpsiesItem gpsiesItem){
 
@@ -82,6 +104,14 @@ private void openGPX(GpsiesItem gpsiesItem){
     i.setData(Uri.parse(gpsiesItem.getGPX()));
     startActivity(i);
 
+
+}
+
+
+private void openMapsOnGpsies(GpsiesItem gpsiesItem){
+    Intent i = new Intent(Intent.ACTION_VIEW);
+    i.setData(Uri.parse(gpsiesItem.getLinkGpsies()))git;
+    startActivity(i);
 
 }
 
@@ -170,7 +200,82 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            readGpsiesItem();
+            fillRecycleView();
         }
     }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView textViewView;
+        private ImageView imageView;
+
+        //itemView est la vue correspondante à 1 cellule
+        public MyViewHolder(View itemView) {
+            super(itemView);
+
+            //c'est ici que l'on fait nos findView
+
+            textViewView = (TextView) itemView.findViewById(R.id.text);
+            imageView = (ImageView) itemView.findViewById(R.id.image);
+
+        }
+
+        //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
+        public void bind(final GpsiesItem myItem) {
+            textViewView.setText(myItem.getTitle());
+
+            textViewView.setOnClickListener(new AdapterView.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openGPX(myItem);
+                }
+
+            });
+
+            imageView.setOnClickListener(new AdapterView.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    openMapsOnGpsies(myItem);
+                }
+            });
+
+            Picasso.get().load(myItem.getImageUrl()).centerCrop().fit().into(imageView);
+        }
+
+
+    }
+
+
+    public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+
+        ArrayList<GpsiesItem> list;
+
+        //ajouter un constructeur prenant en entrée une liste
+        public MyAdapter(ArrayList<GpsiesItem> list) {
+            this.list = list;
+        }
+
+        //cette fonction permet de créer les viewHolder
+        //et par la même indiquer la vue à inflater (à partir des layout xml)
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int itemType) {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.map_card,viewGroup,false);
+            return new MyViewHolder(view);
+        }
+
+        //c'est ici que nous allons remplir notre cellule avec le texte/image de chaque MyObjects
+        @Override
+        public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
+            GpsiesItem myObject = list.get(position);
+            myViewHolder.bind(myObject);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+    }
+
 }

@@ -32,4 +32,9 @@ public class GpsiesItem {
         return gpx;
 
     }
+
+    public String getImageUrl(){
+        String imageUrl = "https://n-peloton.fr/gpx/image.php?id=" +id;
+        return imageUrl ;
+    }
 }

@@ -23,11 +23,21 @@
         tools:context="fr.rezvani.osmand2strava.MainActivity"
         tools:showIn="@layout/activity_main">
 
+
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/liste"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--
+        OLD LISTVIEW
         <ListView
             android:id="@+id/liste"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            /> -->
 
     </RelativeLayout>
 

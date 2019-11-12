@@ -30,4 +30,5 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.opencsv:opencsv:4.6'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
