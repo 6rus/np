@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="fr.n_peloton.n_peloton.MainActivity">
 
 
 
@@ -20,8 +13,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="fr.rezvani.osmand2strava.MainActivity"
-        tools:showIn="@layout/activity_main">
+        tools:context="fr.n_peloton.n_peloton.MainActivity"
+       >
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/sw_refresh"
@@ -30,22 +23,14 @@
 
 
             <android.support.v7.widget.RecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/liste"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <!--
-        OLD LISTVIEW
-        <ListView
-            android:id="@+id/liste"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            /> -->
+
 
     </RelativeLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>

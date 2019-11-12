@@ -35,3 +35,14 @@ dependencies {
     implementation 'com.opencsv:opencsv:4.6'
     implementation 'com.squareup.picasso:picasso:2.71828'
 }
+
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "com.android.support") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "26.+"
+            }
+        }
+    }}
