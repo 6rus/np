@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,24 +30,34 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-  //  CardView mView;
+    //  CardView mView;
     ArrayList<GpsiesItem> gpsiesItems;
     private RecyclerView recyclerView;
+    SwipeRefreshLayout sw_refresh;
+
+    String FLUX_RSS = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
+    String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         String flusRss = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
+        gpsiesItems = new ArrayList<>();
+        sw_refresh = findViewById(R.id.sw_refresh);
 
-        String fluxCsv ="https://n-peloton.fr/getMapCsv.php";
-       gpsiesItems = new ArrayList<>();
-
-        new GetCSVdata().execute(fluxCsv);
-
-
-
+        new GetCSVdata().execute(FLUX_CSV);
         fillRecycleView();
 
+        sw_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(){
+                gpsiesItems.clear();
+                new GetCSVdata().execute(FLUX_CSV);
+                fillRecycleView();
+                sw_refresh.setRefreshing(false);
+            }
+        });
     }
 
 
@@ -156,12 +167,12 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
 
 
 
-    private void readFluxCSV(String fluxCsv){
+    private void readFluxCSV(String FLUX_CSV){
 
 
           GpsiesItem currentItem = null;
             try{
-                InputStream is = new URL(fluxCsv).openStream();
+                InputStream is = new URL(FLUX_CSV).openStream();
                 InputStreamReader isr = new InputStreamReader(is);
 
                 CSVReader reader = new CSVReader(isr);
