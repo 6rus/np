@@ -37,11 +37,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:padding="20dp"
-            tools:text="NP #350"
             android:fontFamily="sans-serif"
+            android:padding="20dp"
             android:textColor="#333"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="NP #350" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_maps"
+                android:theme="@style/PrimaryFlatButton" />
+
+            <Button
+                android:id="@+id/dl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_gpx"
+                android:theme="@style/PrimaryFlatButton" />
+        </LinearLayout>
     </LinearLayout>
+
+
 
 </android.support.v7.widget.CardView>

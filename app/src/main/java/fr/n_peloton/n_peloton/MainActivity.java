@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -209,6 +210,8 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
 
         private TextView textViewView;
         private ImageView imageView;
+        private Button buttonDl;
+        private Button buttonOpen;
 
         //itemView est la vue correspondante à 1 cellule
         public MyViewHolder(View itemView) {
@@ -218,7 +221,8 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
 
             textViewView = (TextView) itemView.findViewById(R.id.text);
             imageView = (ImageView) itemView.findViewById(R.id.image);
-
+            buttonDl = (Button) itemView.findViewById(R.id.dl);
+            buttonOpen = (Button) itemView.findViewById(R.id.open);
         }
 
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
@@ -239,6 +243,25 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
                     openMapsOnGpsies(myItem);
                 }
             });
+
+            buttonDl.setOnClickListener(new AdapterView.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openGPX(myItem);
+                }
+
+            });
+
+            buttonOpen.setOnClickListener(new AdapterView.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openMapsOnGpsies(myItem);
+                }
+
+            });
+
+
+
 
             Picasso.get().load(myItem.getImageUrl()).centerCrop().fit().into(imageView);
         }
