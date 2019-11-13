@@ -12,9 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.opencsv.CSVReader;
@@ -29,15 +32,27 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    ProgressBar mProgressBar;
     //  CardView mView;
     ArrayList<GpsiesItem> gpsiesItems;
     private RecyclerView recyclerView;
     SwipeRefreshLayout sw_refresh;
+    WebView webView;
 
     String FLUX_RSS = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
     String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
 
+    @Override
+    public void onBackPressed() {
+        if(webView!= null){
+            webView.destroy();
+             setContentView(R.layout.activity_main);
+            super.recreate();
+        }
+
+        else
+            super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         gpsiesItems = new ArrayList<>();
         sw_refresh = findViewById(R.id.sw_refresh);
+
+
 
         new GetCSVdata().execute(FLUX_CSV);
         fillRecycleView();
@@ -118,7 +135,18 @@ private void openGPX(GpsiesItem gpsiesItem){
 
 
 }
+    private void openVueAllTrails(GpsiesItem gpsiesItem){
+    //https://stackoverflow.com/questions/7858703/slide-in-animation-on-webview-data
 
+         setContentView( R.layout.webview );
+        webView = findViewById(R.id.vueWeb);
+        mProgressBar = findViewById(R.id.progressBar);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new MyWebviewClient());
+        webView.loadUrl(gpsiesItem.getVueAllTrails());
+
+
+    }
 
 private void openMapsOnGpsies(GpsiesItem gpsiesItem){
     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -251,7 +279,7 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
             imageView.setOnClickListener(new AdapterView.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    openMapsOnGpsies(myItem);
+                    openVueAllTrails(myItem);
                 }
             });
 
@@ -311,5 +339,21 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
         }
 
     }
+
+    private class MyWebviewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            mProgressBar.setVisibility(View.GONE);
+        }
+
+    }
+
 
 }

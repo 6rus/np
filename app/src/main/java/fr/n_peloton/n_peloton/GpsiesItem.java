@@ -37,4 +37,10 @@ public class GpsiesItem {
         String imageUrl = "https://n-peloton.fr/gpx/image.php?id=" +id;
         return imageUrl ;
     }
+
+
+    public String getVueAllTrails(){
+        String vue = "http://www.alltrails.com/widget/map?file_id="+id+"&referrer=gpsies&l=fr&&layer=true";
+        return vue ;
+    }
 }
