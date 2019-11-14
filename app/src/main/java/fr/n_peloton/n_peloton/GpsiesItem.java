@@ -28,7 +28,7 @@ public class GpsiesItem {
 
     public String getGPX(){
 
-       String gpx = "http://www.gpsies.com/download.do?fileId="+id+"&filetype=gpxTrk" ;
+       String gpx = "https://n-peloton.fr/gpx/gpx.php?id="+id ;
         return gpx;
 
     }
@@ -40,7 +40,7 @@ public class GpsiesItem {
 
 
     public String getVueAllTrails(){
-        String vue = "http://www.alltrails.com/widget/map?file_id="+id+"&referrer=gpsies&l=fr&&layer=true";
+        String vue = "https://www.alltrails.com/widget/map?file_id="+id+"&referrer=gpsies&l=fr&&layer=true";
         return vue ;
     }
 }
