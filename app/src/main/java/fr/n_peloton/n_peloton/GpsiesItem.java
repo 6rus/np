@@ -1,5 +1,7 @@
 package fr.n_peloton.n_peloton;
 
+import android.util.Log;
+
 public class GpsiesItem {
 
     public String title,  id, data;
@@ -17,7 +19,13 @@ public class GpsiesItem {
     return title;
 
     }
+    public  String getFileName(){
+        String file_name = getTitle().trim();
+        file_name =file_name.replaceAll(" ", "_");
+        file_name = file_name.replaceAll("#", "");
+        return  file_name;
 
+    }
 
     public String getLinkGpsies(){
 
@@ -28,7 +36,7 @@ public class GpsiesItem {
 
     public String getGPX(){
 
-       String gpx = "https://n-peloton.fr/gpx/gpx.php?id="+id ;
+        String gpx = "https://n-peloton.fr/gpx/gpx.php?id="+id + "&name="+getFileName() ;
         return gpx;
 
     }
