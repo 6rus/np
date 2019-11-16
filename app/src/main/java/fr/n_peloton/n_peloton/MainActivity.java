@@ -1,9 +1,17 @@
 package fr.n_peloton.n_peloton;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,12 +30,15 @@ import android.widget.TextView;
 
 import com.opencsv.CSVReader;
 import com.squareup.picasso.Picasso;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+
+import static android.support.v4.content.FileProvider.getUriForFile;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     SwipeRefreshLayout sw_refresh;
     WebView webView;
+    Long downloadID;
+    private DownloadManager mgr =null;
 
     String FLUX_RSS = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
     String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
@@ -61,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         gpsiesItems = new ArrayList<>();
         sw_refresh = findViewById(R.id.sw_refresh);
 
-
+        mgr=(DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         new GetCSVdata().execute(FLUX_CSV);
         fillRecycleView();
@@ -126,15 +140,14 @@ public class MainActivity extends AppCompatActivity {
         });
     } * **/
 
-private void openGPX(GpsiesItem gpsiesItem){
+    private void openGPX(GpsiesItem gpsiesItem){
 
 
-    Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(gpsiesItem.getGPX()));
-    startActivity(i);
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(gpsiesItem.getGPX()));
+        startActivity(i);
+    }
 
-
-}
     private void openVueAllTrails(GpsiesItem gpsiesItem){
     //https://stackoverflow.com/questions/7858703/slide-in-animation-on-webview-data
 
@@ -144,25 +157,54 @@ private void openGPX(GpsiesItem gpsiesItem){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebviewClient());
         webView.loadUrl(gpsiesItem.getVueAllTrails());
+    }
 
+    private void openMapsOnGpsies(GpsiesItem gpsiesItem){
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(gpsiesItem.getLinkGpsies()));
+        startActivity(i);
 
     }
 
-private void openMapsOnGpsies(GpsiesItem gpsiesItem){
-    Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(gpsiesItem.getLinkGpsies()));
-    startActivity(i);
 
-}
+    private void openGPXOsmand(GpsiesItem gpsiesItem){
+        String file_name =  gpsiesItem.getFileName();
+        Uri uri = Uri.parse(gpsiesItem.getGPX());
 
-private void forceGpxOsmand(GpsiesItem gpsiesItem){
-    /** https://www.javatips.net/api/Osmand-master/OsmAnd/src/net/osmand/plus/helpers/ExternalApiHelper.java */
-    Uri  uri = Uri.parse("osmand.api://navigate_gpx?force=true");
-    Intent i = new Intent(Intent.ACTION_VIEW, uri);
-    i.putExtra("data",gpsiesItem.data);
-    Log.d("data",gpsiesItem.data);
-    startActivity(i);
-}
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle(file_name);
+        request.setVisibleInDownloadsUi(false);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file_name);
+        downloadID = mgr.enqueue(request);
+    }
+
+
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        if(DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(downloadID);
+            Cursor c = mgr.query(query);
+            if(c.moveToFirst()) {
+                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                if(DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                    String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                    if (uriString.substring(0, 7).matches("file://")) {
+                        uriString =  uriString.substring(7);
+                    }
+                    File file = new File(uriString);
+                    Uri uriFile = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+                    Intent intentGPX = new Intent(Intent.ACTION_VIEW);
+                    intentGPX.setDataAndType(uriFile, "application/gpx+xml");
+                    intentGPX.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                    intentGPX.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(intentGPX);
+                }
+            }
+        }
+        }
+    };
 
 
 
@@ -251,6 +293,7 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
         private ImageView imageView;
         private Button buttonDl;
         private Button buttonOpen;
+        private Button buttonOpenOsm;
 
         //itemView est la vue correspondante à 1 cellule
         public MyViewHolder(View itemView) {
@@ -262,6 +305,7 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
             imageView = (ImageView) itemView.findViewById(R.id.image);
             buttonDl = (Button) itemView.findViewById(R.id.dl);
             buttonOpen = (Button) itemView.findViewById(R.id.open);
+            buttonOpenOsm = (Button) itemView.findViewById(R.id.openosm);
         }
 
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
@@ -295,6 +339,14 @@ private void forceGpxOsmand(GpsiesItem gpsiesItem){
                 @Override
                 public void onClick(View view) {
                     openMapsOnGpsies(myItem);
+                }
+
+            });
+            buttonOpenOsm.setOnClickListener(new AdapterView.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openGPXOsmand(myItem);
+
                 }
 
             });

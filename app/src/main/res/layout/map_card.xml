@@ -64,6 +64,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/download_gpx"
                 android:theme="@style/PrimaryFlatButton" />
+
+            <Button
+                android:id="@+id/openosm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_osmand"
+                android:theme="@style/PrimaryFlatButton" />
         </LinearLayout>
     </LinearLayout>
 

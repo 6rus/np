@@ -19,13 +19,6 @@ public class GpsiesItem {
     return title;
 
     }
-    public  String getFileName(){
-        String file_name = getTitle().trim();
-        file_name =file_name.replaceAll(" ", "_");
-        file_name = file_name.replaceAll("#", "");
-        return  file_name;
-
-    }
 
     public String getLinkGpsies(){
 
@@ -33,6 +26,12 @@ public class GpsiesItem {
         return gpx;
 
     }
+
+    public String getFileName(){
+        String file_name = getTitle().replaceAll("[^A-Za-z0-9]", "")+ ".gpx";
+        return file_name;
+    }
+
 
     public String getGPX(){
 
