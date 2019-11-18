@@ -1,7 +1,5 @@
 package fr.n_peloton.n_peloton;
 
-import android.util.Log;
-
 public class GpsiesItem {
 
     public String title,  id, data;

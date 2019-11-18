@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.opencsv.CSVReader;
 import com.squareup.picasso.Picasso;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     //  CardView mView;
     ArrayList<GpsiesItem> gpsiesItems;
     private RecyclerView recyclerView;
+
     SwipeRefreshLayout sw_refresh;
     WebView webView;
     Long downloadID;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         sw_refresh = findViewById(R.id.sw_refresh);
 
 
+        haveStoragePermission();
 
         mgr=(DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -197,11 +200,8 @@ public class MainActivity extends AppCompatActivity {
     private void openGPXOsmand(GpsiesItem gpsiesItem){
 
 
-        haveStoragePermission();
-
         String file_name =  gpsiesItem.getFileName();
         Uri uri = Uri.parse(gpsiesItem.getGPX());
-
         DownloadManager.Request request = new DownloadManager.Request(uri);
         request.setTitle(file_name);
         request.setVisibleInDownloadsUi(false);
@@ -230,7 +230,17 @@ public class MainActivity extends AppCompatActivity {
                     intentGPX.setDataAndType(uriFile, "application/gpx+xml");
                     intentGPX.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                     intentGPX.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intentGPX);
+                    if(intentGPX.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intentGPX, 0);
+                    } else {
+
+                        Toast toast = Toast.makeText(context, "Osmand n'est pas installé", Toast.LENGTH_LONG);
+                        toast.show();
+
+
+
+                    }
+
                 }
             }
         }
