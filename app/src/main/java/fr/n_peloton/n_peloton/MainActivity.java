@@ -1,15 +1,19 @@
 package fr.n_peloton.n_peloton;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         gpsiesItems = new ArrayList<>();
         sw_refresh = findViewById(R.id.sw_refresh);
 
+
+
         mgr=(DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
@@ -104,6 +110,27 @@ public class MainActivity extends AppCompatActivity {
         //puis créer un MyAdapter, lui fournir notre liste de villes.
         //cet adapter servira à remplir notre recyclerview
         recyclerView.setAdapter(new MyAdapter(gpsiesItems));
+    }
+
+
+
+    public  boolean haveStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.e("Permission error","You have permission");
+                return true;
+            } else {
+
+                Log.e("Permission error","You have asked for permission");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //you dont need to worry about these stuff below api level 23
+            Log.e("Permission error","You already have the permission");
+            return true;
+        }
     }
 
 
@@ -168,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void openGPXOsmand(GpsiesItem gpsiesItem){
+
+
+        haveStoragePermission();
+
         String file_name =  gpsiesItem.getFileName();
         Uri uri = Uri.parse(gpsiesItem.getGPX());
 
