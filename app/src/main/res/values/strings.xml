@@ -3,5 +3,5 @@
     <string name="view_maps">Ouvrir</string>
     <string name="download_gpx">Télécharger</string>
     <string name="open_osmand">Afficher dans Osmand</string>
-
+    <string name="search_title">Rechercher</string>
 </resources>

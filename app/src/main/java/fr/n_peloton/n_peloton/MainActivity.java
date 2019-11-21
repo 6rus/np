@@ -16,12 +16,16 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -30,11 +34,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.opencsv.CSVReader;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.text.diff.StringsComparator;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     String FLUX_RSS = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
     String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
 
+    String searchString="";
+
+
     @Override
     public void onBackPressed() {
         if(webView!= null){
@@ -72,6 +83,50 @@ public class MainActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Gravel");
+
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchString = query;
+                gpsiesItems.clear();
+                new GetCSVdata().execute(FLUX_CSV);
+                fillRecycleView();
+                sw_refresh.setRefreshing(false);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                searchString = s;
+                gpsiesItems.clear();
+                new GetCSVdata().execute(FLUX_CSV);
+                fillRecycleView();
+                sw_refresh.setRefreshing(false);
+                return false;
+            }
+        });
+
+        return true;
+
+
+
+
+
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         sw_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(){
+                searchString="";
                 gpsiesItems.clear();
                 new GetCSVdata().execute(FLUX_CSV);
                 fillRecycleView();
@@ -112,7 +168,9 @@ public class MainActivity extends AppCompatActivity {
 
         //puis créer un MyAdapter, lui fournir notre liste de villes.
         //cet adapter servira à remplir notre recyclerview
+
         recyclerView.setAdapter(new MyAdapter(gpsiesItems));
+
     }
 
 
@@ -292,9 +350,16 @@ public class MainActivity extends AppCompatActivity {
                     // nextLine[] is an array of values from the line
                     String[] parts = nextLine[0].split(";");
                     if(parts.length>0){
-                        currentItem = new GpsiesItem(parts[0],parts[1]);
 
-                        gpsiesItems.add(currentItem);
+                        String title = parts[1];
+
+                        if(title.toUpperCase().contains(searchString.toUpperCase() )){
+                            currentItem = new GpsiesItem(parts[0],parts[1]);
+                            gpsiesItems.add(currentItem);
+                        }
+
+
+
 
                     }
                 }
@@ -351,7 +416,12 @@ public class MainActivity extends AppCompatActivity {
 
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
         public void bind(final GpsiesItem myItem) {
-            textViewView.setText(myItem.getTitle());
+            if(myItem!=null){
+                textViewView.setText(myItem.getTitle());
+
+
+            }
+
 
             textViewView.setOnClickListener(new AdapterView.OnClickListener() {
                 @Override
@@ -394,8 +464,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-            Picasso.get().load(myItem.getImageUrl()).centerCrop().fit().into(imageView);
+            if(myItem !=null) {
+                Picasso.get().load(myItem.getImageUrl()).centerCrop().fit().into(imageView);
+            }
         }
 
 
@@ -423,7 +494,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
             GpsiesItem myObject = list.get(position);
-            myViewHolder.bind(myObject);
+            if(myObject!=null) {
+                myViewHolder.bind(myObject);
+            }
         }
 
         @Override
