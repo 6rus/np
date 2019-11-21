@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
 
     String searchString="";
-
+    SearchView searchView=null;
 
     @Override
     public void onBackPressed() {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.options_menu, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Gravel");
 
 
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh(){
                 searchString="";
+                searchView.setQuery("",true);
                 gpsiesItems.clear();
                 new GetCSVdata().execute(FLUX_CSV);
                 fillRecycleView();
