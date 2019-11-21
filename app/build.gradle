@@ -6,8 +6,8 @@ android {
         applicationId "fr.n_peloton.n_peloton"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.3"
+        versionCode 6
+        versionName "1.5"
 
     }
     buildTypes {

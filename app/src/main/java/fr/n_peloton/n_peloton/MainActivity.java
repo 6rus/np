@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         if(webView!= null){
             webView.destroy();
              setContentView(R.layout.activity_main);
-            super.recreate();
+                        super.recreate();
+            searchView.setVisibility(View.VISIBLE);
         }
 
         else
@@ -232,10 +233,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void openVueAllTrails(GpsiesItem gpsiesItem){
     //https://stackoverflow.com/questions/7858703/slide-in-animation-on-webview-data
-
+        searchView.setVisibility(View.INVISIBLE);
+        searchView.setIconified(true);
          setContentView( R.layout.webview );
         webView = findViewById(R.id.vueWeb);
         mProgressBar = findViewById(R.id.progressBar);
+
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebviewClient());
         webView.loadUrl(gpsiesItem.getVueAllTrails());
