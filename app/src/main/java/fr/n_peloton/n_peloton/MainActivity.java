@@ -14,9 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +29,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -41,17 +39,12 @@ import android.widget.Toast;
 import com.opencsv.CSVReader;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.text.diff.StringsComparator;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-
-import static android.support.v4.content.FileProvider.getUriForFile;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -397,9 +390,9 @@ public class MainActivity extends AppCompatActivity {
 
         private TextView textViewView;
         private ImageView imageView;
-        private Button buttonDl;
-        private Button buttonOpen;
-        private Button buttonOpenOsm;
+        private ImageButton buttonDl;
+        private ImageButton buttonOpen;
+        private ImageButton buttonOpenOsm;
 
         //itemView est la vue correspondante à 1 cellule
         public MyViewHolder(View itemView) {
@@ -409,9 +402,9 @@ public class MainActivity extends AppCompatActivity {
 
             textViewView = (TextView) itemView.findViewById(R.id.text);
             imageView = (ImageView) itemView.findViewById(R.id.image);
-            buttonDl = (Button) itemView.findViewById(R.id.dl);
-            buttonOpen = (Button) itemView.findViewById(R.id.open);
-            buttonOpenOsm = (Button) itemView.findViewById(R.id.openosm);
+            buttonDl = (ImageButton) itemView.findViewById(R.id.dl);
+            buttonOpen = (ImageButton) itemView.findViewById(R.id.open);
+            buttonOpenOsm = (ImageButton) itemView.findViewById(R.id.openosm);
         }
 
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject

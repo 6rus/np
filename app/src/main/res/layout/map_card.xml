@@ -49,28 +49,47 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            >
 
-            <Button
+
+
+            <ImageButton
                 android:id="@+id/open"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/view_maps"
-                android:theme="@style/PrimaryFlatButton" />
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:layout_margin="5dp"
 
-            <Button
+                android:background="@drawable/icon_selector"
+                android:src="@drawable/browse" />
+
+            <ImageButton
                 android:id="@+id/dl"
+                style="@style/Widget.AppCompat.ImageButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/download_gpx"
-                android:theme="@style/PrimaryFlatButton" />
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
 
-            <Button
+                android:background="@drawable/icon_selector"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_download" />
+
+            <ImageButton
                 android:id="@+id/openosm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/open_osmand"
-                android:theme="@style/PrimaryFlatButton" />
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+
+                android:scaleType="fitCenter"
+                android:background="@drawable/icon_selector"
+                android:src="@drawable/ic_navigation" />
         </LinearLayout>
     </LinearLayout>
 
