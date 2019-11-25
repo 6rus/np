@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="4dp"
 
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <!-- Les CardView possèdent des attributs supplémentaires dont
          - cardBackgroundColor
@@ -35,11 +35,10 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/image"
+
             android:background="@drawable/rounded_title">
 
             <TextView
@@ -52,7 +51,7 @@
                 android:paddingTop="10dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="10dp"
-                android:textColor="#333"
+                android:textColor="@color/cardview_light_background"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="NP #350" />
