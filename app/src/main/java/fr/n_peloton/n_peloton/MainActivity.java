@@ -156,15 +156,17 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.liste);
         //définit l'agencement des cellules, ici de façon verticale, comme une ListView
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if(recyclerView!=null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //pour adapter en grille comme une RecyclerView, avec 2 cellules par ligne
-        //recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            //pour adapter en grille comme une RecyclerView, avec 2 cellules par ligne
+            //recyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
-        //puis créer un MyAdapter, lui fournir notre liste de villes.
-        //cet adapter servira à remplir notre recyclerview
+            //puis créer un MyAdapter, lui fournir notre liste de villes.
+            //cet adapter servira à remplir notre recyclerview
 
-        recyclerView.setAdapter(new MyAdapter(gpsiesItems));
+            recyclerView.setAdapter(new MyAdapter(gpsiesItems));
+        }
 
     }
 

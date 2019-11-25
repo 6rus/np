@@ -12,9 +12,9 @@ public class GpsiesItem {
     public String getTitle() {
     if(title.contains("[France]")){
         int end = title.length() -" [France]".length();
-        return title.substring(0,end);
+        return title.substring(0,end).trim();
     }
-    return title;
+    return title.trim();
 
     }
 
