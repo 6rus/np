@@ -2,11 +2,35 @@ package fr.n_peloton.n_peloton;
 
 public class GpsiesItem {
 
-    public String title,  id, data;
+    public String title,  id, km, elevation;
 
     public GpsiesItem(String id, String title) {
         this.id=id;
         this.title=title;
+    }
+    public GpsiesItem(String id, String title, String km, String elevation) {
+        this.id=id;
+        this.title=title;
+        this.km=km;
+        this.elevation = elevation;
+    }
+
+    public String getKm(){
+
+        return  km + "km";
+
+    }
+    public String getElevation(){
+
+        return  elevation.replace("+", "\u2191").replace("-"," \u2193") ;
+
+    }
+
+
+    public  String getDescription(){
+
+        return  getKm() + "  " + getElevation();
+
     }
 
     public String getTitle() {

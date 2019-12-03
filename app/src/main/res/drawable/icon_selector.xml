@@ -4,7 +4,7 @@
     <item
         android:state_enabled="false"
         android:drawable="@drawable/rounded_bg">
-            <corner android:radius="4dp" />
+
 
     </item>
     <!-- pressed state / clicked state -->

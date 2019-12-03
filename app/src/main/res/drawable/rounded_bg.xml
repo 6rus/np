@@ -1,11 +1,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+    android:shape="ring"
+    android:thicknessRatio="1.9"
+    android:useLevel="false"
+    >
 
-    <solid android:color="@color/backgroundButton" />
-    <corners
-        android:bottomLeftRadius="@dimen/radius_custom"
-        android:bottomRightRadius="@dimen/radius_custom"
-        android:topLeftRadius="@dimen/radius_custom"
-        android:topRightRadius="@dimen/radius_custom" />
     <stroke android:width="@dimen/border_button_size" android:color="@color/colorButton" />
+
 </shape>

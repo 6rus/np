@@ -4,7 +4,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="radius_custom">10dp</dimen>
-    <dimen name="button_size">40dp</dimen>
-    <dimen name="border_button_size">2px</dimen>
+    <dimen name="button_size">78dp</dimen>
+    <dimen name="button_padding">20dp</dimen>
+    <dimen name="button_margin">10dp</dimen>
+    <dimen name="border_button_size">3dp</dimen>
 
 </resources>

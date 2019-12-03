@@ -16,7 +16,7 @@
          - cardCornerRadius pour arrondir les angles
      -->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -37,58 +37,59 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/image"
 
-            android:background="@drawable/rounded_title">
+            >
 
             <TextView
                 android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
                 android:fontFamily="sans-serif"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
                 android:paddingRight="20dp"
-                android:paddingBottom="10dp"
-                android:textColor="@color/cardview_light_background"
-                android:textSize="18sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
+                tools:text="NP #350" />
+            <TextView
+                android:id="@+id/km"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="18sp"
                 tools:text="NP #350" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/image"
-            android:layout_marginStart="5dp"
 
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:padding="5dp"
+
             android:weightSum="3">
 
 
             <ImageButton
                 android:id="@+id/open"
                 android:layout_width="wrap_content"
+
+                android:padding="@dimen/button_padding"
                 android:layout_height="@dimen/button_size"
-                android:layout_margin="5dp"
+
                 android:layout_weight="1"
                 android:background="@drawable/icon_selector"
+                android:layout_margin="@dimen/button_margin"
 
                 android:scaleType="fitCenter"
                 android:src="@drawable/browse" />
 
             <ImageButton
                 android:id="@+id/dl"
-                style="@style/Widget.AppCompat.ImageButton"
                 android:layout_width="wrap_content"
+                android:padding="@dimen/button_padding"
                 android:layout_height="@dimen/button_size"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/button_margin"
                 android:layout_weight="1"
 
                 android:background="@drawable/icon_selector"
@@ -98,15 +99,17 @@
             <ImageButton
                 android:id="@+id/openosm"
                 android:layout_width="wrap_content"
+                android:padding="@dimen/button_padding"
                 android:layout_height="@dimen/button_size"
-                android:layout_margin="5dp"
+
+                android:layout_margin="@dimen/button_margin"
                 android:layout_weight="1"
 
                 android:background="@drawable/icon_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_navigation" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

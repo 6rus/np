@@ -351,9 +351,10 @@ public class MainActivity extends AppCompatActivity {
                     if(parts.length>0){
 
                         String title = parts[1];
-
+                        String km = parts[2];
+                        String elevation = parts[3];
                         if(title.toUpperCase().contains(searchString.toUpperCase() )){
-                            currentItem = new GpsiesItem(parts[0],parts[1]);
+                            currentItem = new GpsiesItem(parts[0],parts[1],km, elevation);
                             gpsiesItems.add(currentItem);
                         }
 
@@ -395,6 +396,8 @@ public class MainActivity extends AppCompatActivity {
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewView;
+        private TextView kmView;
+
         private ImageView imageView;
         private ImageButton buttonDl;
         private ImageButton buttonOpen;
@@ -407,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
             //c'est ici que l'on fait nos findView
 
             textViewView = (TextView) itemView.findViewById(R.id.text);
+            kmView = (TextView) itemView.findViewById(R.id.km);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             buttonDl = (ImageButton) itemView.findViewById(R.id.dl);
             buttonOpen = (ImageButton) itemView.findViewById(R.id.open);
@@ -417,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
         public void bind(final GpsiesItem myItem) {
             if(myItem!=null){
                 textViewView.setText(myItem.getTitle());
-
+                kmView.setText(myItem.getDescription());
 
             }
 
