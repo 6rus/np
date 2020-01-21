@@ -44,13 +44,13 @@ public class GpsiesItem {
 
     public String getLinkGpsies(){
 
-        String gpx = "https://www.gpsies.com/map.do?fileId="+id ;
+        String gpx = "https://n-peloton.fr/maps/?fileId="+id +"&name="+ getFileName();
         return gpx;
 
     }
 
     public String getFileName(){
-        String file_name = getTitle().replaceAll("[^A-Za-z0-9]", "")+ ".gpx";
+        String file_name = getTitle().replaceAll("[^A-Za-z0-9]", "");
         return file_name;
     }
 
@@ -69,7 +69,7 @@ public class GpsiesItem {
 
 
     public String getVueAllTrails(){
-        String vue = "https://www.alltrails.com/widget/map?file_id="+id+"&referrer=gpsies&l=fr&&layer=true";
+        String vue = "https://n-peloton.fr/maps/?fileId="+id +"&name="+getFileName();
         return vue ;
     }
 }

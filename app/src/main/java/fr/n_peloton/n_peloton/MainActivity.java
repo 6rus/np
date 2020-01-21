@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     Long downloadID;
     private DownloadManager mgr =null;
 
-    String FLUX_RSS = "https://www.gpsies.com/geoRSS.do?username=n-peloton";
     String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
 
     String searchString="";
@@ -252,6 +251,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
 
     }
+
+
+
 
 
     private void openGPXOsmand(GpsiesItem gpsiesItem){
