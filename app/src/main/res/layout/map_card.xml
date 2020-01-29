@@ -60,6 +60,15 @@
                 android:paddingRight="20dp"
                 android:textSize="18sp"
                 tools:text="NP #350" />
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="12sp"
+                tools:text="NP #350" />
         </LinearLayout>
 
         <LinearLayout

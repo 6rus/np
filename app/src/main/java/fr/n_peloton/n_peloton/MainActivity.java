@@ -36,15 +36,20 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.opencsv.CSVReader;
 import com.squareup.picasso.Picasso;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     Long downloadID;
     private DownloadManager mgr =null;
 
-    String FLUX_CSV ="https://n-peloton.fr/getMapCsv.php";
+    String FLUX_CSV ="https://n-peloton.fr/androidjson/";
 
     String searchString="";
     SearchView searchView=null;
@@ -342,29 +347,60 @@ public class MainActivity extends AppCompatActivity {
 
           GpsiesItem currentItem = null;
             try{
+
                 InputStream is = new URL(FLUX_CSV).openStream();
                 InputStreamReader isr = new InputStreamReader(is);
-
-                CSVReader reader = new CSVReader(isr);
-                String [] nextLine;
-                while ((nextLine = reader.readNext()) != null) {
-                    // nextLine[] is an array of values from the line
-                    String[] parts = nextLine[0].split(";");
-                    if(parts.length>0){
-
-                        String title = parts[1];
-                        String km = parts[2];
-                        String elevation = parts[3];
-                        if(title.toUpperCase().contains(searchString.toUpperCase() )){
-                            currentItem = new GpsiesItem(parts[0],parts[1],km, elevation);
-                            gpsiesItems.add(currentItem);
-                        }
+                JSONParser jsonParser = new JSONParser();
+                JSONArray jsonArray = (JSONArray) jsonParser.parse(
+                        new InputStreamReader(is, "UTF-8"));
 
 
+            /**    JSONArray array = new JSONArray();
+                array.add(jsonObject);
+**/
 
 
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject map = (JSONObject)jsonArray.get(i);
+                    String id = (String)map.get("id");
+                    String title = (String)map.get("title");
+                    Double km =Double.valueOf(String.valueOf(map.get("distance")));;
+
+                    Long elevationplus = (Long)map.get("positiveElevation");
+                    Long elevationmoins = (Long)map.get("negativeElevation");
+
+                    if(title.toUpperCase().contains(searchString.toUpperCase() )){
+                        currentItem = new GpsiesItem(id,title,km, elevationplus,elevationmoins);
+                        currentItem.setTags((List<String>)map.get("tags"));
+                        currentItem.setTime((Long)map.get("time"));
+                        gpsiesItems.add(currentItem);
                     }
                 }
+
+/**
+                JSONArray arr = jsonObject.get("value");**/
+/*
+              Collection<JSONObject> maps = jsonObject.values();
+              JSONArray jsonArray = new JSONArray();
+                Iterator<JSONObject> iterator = maps.iterator();
+                while (iterator.hasNext()) {
+                    JSONObject map = iterator.next();
+
+                    int time =  (int)map.get("time");
+                    String id = (String)map.get("id");
+                    String title = (String)map.get("title");
+                    String km =(String)map.get("km");
+                    String elevation = (String)map.get("denivele");
+                    jsonArray  .add(time, map);
+
+                    if(title.toUpperCase().contains(searchString.toUpperCase() )){
+                        currentItem = new GpsiesItem(id,title,km, elevation);
+                        gpsiesItems.add(currentItem);
+                    }
+
+                } */
+
+
             }catch(Exception e){
                 e.printStackTrace();
                 Log.e(e.getClass().toString(), e.getMessage());
@@ -399,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
         private TextView textViewView;
         private TextView kmView;
+        private TextView dateView;
 
         private ImageView imageView;
         private ImageButton buttonDl;
@@ -413,6 +450,7 @@ public class MainActivity extends AppCompatActivity {
 
             textViewView = (TextView) itemView.findViewById(R.id.text);
             kmView = (TextView) itemView.findViewById(R.id.km);
+            dateView = (TextView) itemView.findViewById(R.id.date);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             buttonDl = (ImageButton) itemView.findViewById(R.id.dl);
             buttonOpen = (ImageButton) itemView.findViewById(R.id.open);
@@ -422,8 +460,9 @@ public class MainActivity extends AppCompatActivity {
         //puis ajouter une fonction pour remplir la cellule en fonction d'un MyObject
         public void bind(final GpsiesItem myItem) {
             if(myItem!=null){
-                textViewView.setText(myItem.getTitle());
+                textViewView.setText(myItem.getTitlePrint());
                 kmView.setText(myItem.getDescription());
+                dateView.setText(myItem.showDate());
 
             }
 
